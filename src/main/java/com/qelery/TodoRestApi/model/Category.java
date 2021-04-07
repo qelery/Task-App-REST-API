@@ -1,6 +1,7 @@
 package com.qelery.TodoRestApi.model;
 
 import javax.persistence.*;
+
 @Entity
 @Table(name="categories")
 public class Category {
