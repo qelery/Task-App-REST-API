@@ -1,12 +1,12 @@
-package com.qelery.TodoRestApi.model;
+package com.qelery.TaskRestApi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "task")
+@Table(name = "tasks")
 public class Task {
 
     @Id
@@ -22,19 +22,25 @@ public class Task {
     private String description;
 
     @Column
-    private Date dueDate;
+    private LocalDate dueDate;
 
     @Column
     private Boolean isDone;
 
     @JsonIgnore
     @ManyToOne
+    @JoinColumn(name="category_id")
     private Category category;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="user_id") // This means create a user_id foreign key column in tasks table that will map this table to the user tables
+    private User user;
 
     public Task() {
     }
 
-    public Task(Long id, String name, String description, Date dueDate, Boolean isDone) {
+    public Task(Long id, String name, String description, LocalDate dueDate, Boolean isDone) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -66,11 +72,11 @@ public class Task {
         this.description = description;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -78,8 +84,8 @@ public class Task {
         return isDone;
     }
 
-    public void setIsDone(Boolean done) {
-        isDone = done;
+    public void setIsDone(Boolean isDone) {
+        this.isDone = isDone;
     }
 
     public Category getCategory() {

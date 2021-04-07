@@ -1,4 +1,4 @@
-package com.qelery.TodoRestApi.exception;
+package com.qelery.TaskRestApi.exception;
 
 public class CategoryExistsException extends RuntimeException {
 

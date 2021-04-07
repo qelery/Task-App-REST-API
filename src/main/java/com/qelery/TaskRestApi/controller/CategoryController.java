@@ -1,8 +1,8 @@
-package com.qelery.TodoRestApi.controller;
+package com.qelery.TaskRestApi.controller;
 
-import com.qelery.TodoRestApi.model.Category;
-import com.qelery.TodoRestApi.model.Task;
-import com.qelery.TodoRestApi.service.CategoryService;
+import com.qelery.TaskRestApi.model.Category;
+import com.qelery.TaskRestApi.model.Task;
+import com.qelery.TaskRestApi.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,14 +47,16 @@ public class CategoryController {
 
     // Task endpoints
     @GetMapping("/categories/tasks/all")
-    public List<Task> getAllTasks(@RequestParam(required=false) Boolean completed) {
-        return categoryService.getAllTasks(completed);
+    public List<Task> getAllTasks(@RequestParam(required=false) Boolean completed,
+                                  @RequestParam(required=false) Boolean overdue) {
+        return categoryService.getAllTasks(completed, overdue);
     }
 
     @GetMapping("/categories/{categoryId}/tasks")
     public List<Task> getTasksByCategory(@PathVariable Long categoryId,
-                                         @RequestParam(required=false) Boolean completed) {
-        return categoryService.getTasksByCategory(categoryId, completed);
+                                         @RequestParam(required=false) Boolean completed,
+                                         @RequestParam(required=false) Boolean overdue) {
+        return categoryService.getTasksByCategory(categoryId, completed, overdue);
     }
 
     @GetMapping("/categories/{categoryId}/tasks/{taskId}")

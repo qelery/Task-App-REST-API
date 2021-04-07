@@ -1,4 +1,4 @@
-package com.qelery.TodoRestApi;
+package com.qelery.TaskRestApi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

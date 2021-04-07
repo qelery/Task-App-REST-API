@@ -1,16 +1,17 @@
-package com.qelery.TodoRestApi.service;
+package com.qelery.TaskRestApi.service;
 
 
-import com.qelery.TodoRestApi.exception.CategoryExistsException;
-import com.qelery.TodoRestApi.exception.CategoryNotFoundException;
-import com.qelery.TodoRestApi.exception.TaskNotFoundException;
-import com.qelery.TodoRestApi.model.Category;
-import com.qelery.TodoRestApi.model.Task;
-import com.qelery.TodoRestApi.repository.CategoryRepository;
-import com.qelery.TodoRestApi.repository.TaskRepository;
+import com.qelery.TaskRestApi.exception.CategoryExistsException;
+import com.qelery.TaskRestApi.exception.CategoryNotFoundException;
+import com.qelery.TaskRestApi.exception.TaskNotFoundException;
+import com.qelery.TaskRestApi.model.Category;
+import com.qelery.TaskRestApi.model.Task;
+import com.qelery.TaskRestApi.repository.CategoryRepository;
+import com.qelery.TaskRestApi.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -75,21 +76,31 @@ public class CategoryService {
 
 
     // Task CRUD methods
-    public List<Task> getAllTasks(Boolean completedRequestParam) {
+    public List<Task> getAllTasks(Boolean completedRequestParam, Boolean overdueRequestParam) {
         List<Category> allCategories = categoryRepository.findAll();
-        List<Task> allTasks = allCategories.stream()
+        List<Task> tasks = allCategories.stream()
                 .map(Category::getTasks)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
-        if (completedRequestParam == null) return allTasks;
-        return filterByCompletionStatus(allTasks, completedRequestParam);
+        if (completedRequestParam != null) {
+            tasks = filterByCompletionStatus(tasks, completedRequestParam);
+        }
+        if (overdueRequestParam != null) {
+            tasks = filterByOverdueStatus(tasks, overdueRequestParam);
+        }
+        return tasks;
     }
 
-    public List<Task> getTasksByCategory(Long categoryId, Boolean completedRequestParam) {
+    public List<Task> getTasksByCategory(Long categoryId, Boolean completedRequestParam, Boolean overdueRequestParam) {
         Category category = this.getCategory(categoryId);
         List<Task> tasks = category.getTasks();
-        if (completedRequestParam == null) return tasks;
-        return filterByCompletionStatus(tasks, completedRequestParam);
+        if (completedRequestParam != null) {
+            tasks = filterByCompletionStatus(tasks, completedRequestParam);
+        }
+        if (overdueRequestParam != null) {
+            tasks = filterByOverdueStatus(tasks, overdueRequestParam);
+        }
+        return tasks;
     }
 
     public Task getTaskByCategory(Long categoryId, Long taskId) {
@@ -122,7 +133,7 @@ public class CategoryService {
         return task;
     }
 
-    private List<Task> filterByCompletionStatus(List<Task> tasks, boolean completionStatus) {
+    private List<Task> filterByCompletionStatus(List<Task> tasks, Boolean completionStatus) {
         if (completionStatus) {
             return tasks.stream()
                     .filter(Task::getIsDone)
@@ -130,6 +141,21 @@ public class CategoryService {
         } else {
             return tasks.stream()
                     .filter(task -> !task.getIsDone())
+                    .collect(Collectors.toList());
+        }
+    }
+
+    private List<Task> filterByOverdueStatus(List<Task> tasks, Boolean overdueRequestParam) {
+        // Tasks are considered overdue if the due date is in the past and they have not been done
+        // Tasks that have a due date in the past but have been done are not considered overdue
+        LocalDate today = LocalDate.now();
+        if (overdueRequestParam) {
+            return tasks.stream()
+                    .filter(task -> today.isAfter(task.getDueDate()) && !task.getIsDone())
+                    .collect(Collectors.toList());
+        } else {
+            return tasks.stream()
+                    .filter(task -> !today.isAfter(task.getDueDate()) || task.getIsDone())
                     .collect(Collectors.toList());
         }
     }

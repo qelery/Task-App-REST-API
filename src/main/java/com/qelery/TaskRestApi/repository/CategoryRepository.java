@@ -1,7 +1,7 @@
-package com.qelery.TodoRestApi.repository;
+package com.qelery.TaskRestApi.repository;
 
 
-import com.qelery.TodoRestApi.model.Category;
+import com.qelery.TaskRestApi.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {

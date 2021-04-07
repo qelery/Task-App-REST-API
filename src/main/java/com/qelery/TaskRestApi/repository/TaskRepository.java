@@ -1,6 +1,6 @@
-package com.qelery.TodoRestApi.repository;
+package com.qelery.TaskRestApi.repository;
 
-import com.qelery.TodoRestApi.model.Task;
+import com.qelery.TaskRestApi.model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

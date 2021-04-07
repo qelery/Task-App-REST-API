@@ -1,10 +1,14 @@
-package com.qelery.TodoRestApi.model;
+package com.qelery.TaskRestApi.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="category")
+@Table(name="categories")
 public class Category {
 
     @Id
@@ -19,7 +23,13 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy="category", orphanRemoval=true)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Task> tasks;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="user_id") // This means create a user_id foreign key column in categories table that will map this table to the user tables
+    private User user;
 
     public Category(Long id, String name, String description) {
         this.id = id;

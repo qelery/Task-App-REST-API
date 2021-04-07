@@ -1,4 +1,4 @@
-package com.qelery.TodoRestApi.exception;
+package com.qelery.TaskRestApi.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

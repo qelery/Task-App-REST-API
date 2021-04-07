@@ -1,4 +1,4 @@
-package com.qelery.TodoRestApi;
+package com.qelery.TaskRestApi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
