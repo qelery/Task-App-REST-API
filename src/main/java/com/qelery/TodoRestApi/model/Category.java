@@ -1,9 +1,10 @@
 package com.qelery.TodoRestApi.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name="categories")
+@Table(name="category")
 public class Category {
 
     @Id
@@ -16,6 +17,9 @@ public class Category {
 
     @Column
     private String description;
+
+    @OneToMany(mappedBy="category", orphanRemoval=true)
+    private List<Task> tasks;
 
     public Category(Long id, String name, String description) {
         this.id = id;
@@ -48,6 +52,14 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override
