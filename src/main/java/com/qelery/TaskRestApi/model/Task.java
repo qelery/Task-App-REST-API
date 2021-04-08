@@ -25,7 +25,7 @@ public class Task {
     private LocalDate dueDate;
 
     @Column
-    private Boolean isDone;
+    private Boolean isDone = false;
 
     @JsonIgnore
     @ManyToOne
@@ -34,7 +34,7 @@ public class Task {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="user_id") // This means create a user_id foreign key column in tasks table that will map this table to the user tables
+    @JoinColumn(name="user_id")
     private User user;
 
     public Task() {

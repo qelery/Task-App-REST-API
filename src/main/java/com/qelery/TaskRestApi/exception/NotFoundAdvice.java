@@ -22,8 +22,22 @@ public class NotFoundAdvice {
 
     @ResponseBody
     @ExceptionHandler(CategoryExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT) // 409
+    @ResponseStatus(HttpStatus.CONFLICT)
     public String CategoryExistsHandler(CategoryExistsException ex)  {
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(UsernameExistsException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String UsernameExistsHandler(UsernameExistsException ex)  {
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(EmailAddressExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String EmailAddressExistsHandler(EmailAddressExistsException ex)  {
         return ex.getMessage();
     }
 }
