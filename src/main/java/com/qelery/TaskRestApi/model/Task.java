@@ -1,6 +1,8 @@
 package com.qelery.TaskRestApi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.qelery.TaskRestApi.model.enums.Priority;
+import com.qelery.TaskRestApi.model.enums.Status;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -25,6 +27,9 @@ public class Task {
     private LocalDate dueDate;
 
     @Column
+    private Priority priority;
+
+    @Column
     private Status status = Status.PENDING;
 
     @JsonIgnore
@@ -40,11 +45,12 @@ public class Task {
     public Task() {
     }
 
-    public Task(Long id, String name, String description, LocalDate dueDate, Status status) {
+    public Task(Long id, String name, String description, LocalDate dueDate, Priority priority, Status status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.dueDate = dueDate;
+        this.priority = priority;
         this.status = status;
     }
 
@@ -88,12 +94,24 @@ public class Task {
         this.status = status;
     }
 
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
     public Category getCategory() {
         return category;
     }
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

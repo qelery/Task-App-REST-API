@@ -20,9 +20,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByUsername(username);
+        User user = userService.findByEmail(username);
         if (user == null) {
-            throw new UsernameNotFoundException("Username does not exist. Please register.");
+            throw new UsernameNotFoundException("User does not exist by supplied email. Please register.");
         }
         return new UserDetailsImpl(user);
     }

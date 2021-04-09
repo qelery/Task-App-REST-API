@@ -12,39 +12,35 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique=true)
-    private String username;
+    @Column(unique=true, nullable=false)
+    private String email;
 
-    @Column
+    @Column(nullable=false)
     @JsonProperty(access=JsonProperty.Access.WRITE_ONLY)
     private String password;
-
-    @Column(unique=true)
-    private String emailAddress;
 
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="profile_id")
     private UserProfile userProfile;
 
-    @OneToMany(mappedBy="user") // This means that the Category.user property holds the logic for mapping this relationship
+    @OneToMany(mappedBy="user")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Category> categories;
 
-    @OneToMany(mappedBy="user") // This means that the Task.user property holds the logic for mapping this relationship
+    @OneToMany(mappedBy="user")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Task> tasks;
 
     public User() {
     }
 
-    public User(Long id, String username, String password, String emailAddress) {
+    public User(Long id, String email, String password) {
         this.id = id;
-        this.username = username;
+        this.email = email;
         this.password = password;
-        this.emailAddress = emailAddress;
     }
 
     public Long getId() {
@@ -55,13 +51,14 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
+
 
     public String getPassword() {
         return password;
@@ -71,21 +68,12 @@ public class User {
         this.password = password;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", emailAddress='" + emailAddress + '\'' +
+                ", emailAddress='" + email + '\'' +
                 '}';
     }
 }
