@@ -5,6 +5,7 @@ import com.qelery.TaskRestApi.exception.CategoryExistsException;
 import com.qelery.TaskRestApi.exception.CategoryNotFoundException;
 import com.qelery.TaskRestApi.exception.TaskNotFoundException;
 import com.qelery.TaskRestApi.model.Category;
+import com.qelery.TaskRestApi.model.Status;
 import com.qelery.TaskRestApi.model.Task;
 import com.qelery.TaskRestApi.repository.CategoryRepository;
 import com.qelery.TaskRestApi.repository.TaskRepository;
@@ -62,6 +63,13 @@ public class CategoryService {
         } else {
             throw new CategoryNotFoundException(categoryId);
         }
+    }
+
+    public Category partialUpdateCategory(Long categoryId, Category newCategory) {
+        Category existingCategory = this.getCategory(categoryId);
+        Optional.ofNullable(newCategory.getName()).ifPresent(existingCategory::setName);
+        Optional.ofNullable(newCategory.getDescription()).ifPresent(existingCategory::setDescription);
+        return categoryRepository.save(existingCategory);
     }
 
     public Category deleteCategory(Long categoryId) {
@@ -123,8 +131,23 @@ public class CategoryService {
         oldTask.setName(newTask.getName());
         oldTask.setDescription(newTask.getDescription());
         oldTask.setDueDate(newTask.getDueDate());
-        oldTask.setIsDone(newTask.getIsDone());
+        oldTask.setStatus(newTask.getStatus());
         return taskRepository.save(oldTask);
+    }
+
+    public Task markTaskComplete(Long categoryId, Long taskId) {
+        Task task = this.getTaskByCategory(categoryId, taskId);
+        task.setStatus(Status.COMPLETED);
+        return taskRepository.save(task);
+    }
+
+    public Task partialUpdateTask(Long categoryId, Long taskId, Task newTask) {
+        Task existingTask = this.getTaskByCategory(categoryId, taskId);
+        Optional.ofNullable(newTask.getName()).ifPresent(existingTask::setName);
+        Optional.ofNullable(newTask.getDescription()).ifPresent(existingTask::setDescription);
+        Optional.ofNullable(newTask.getDueDate()).ifPresent(existingTask::setDueDate);
+        Optional.ofNullable(newTask.getStatus()).ifPresent(existingTask::setStatus);
+        return taskRepository.save(existingTask);
     }
 
     public Task deleteTask(Long categoryId, Long taskId) {
@@ -133,29 +156,32 @@ public class CategoryService {
         return task;
     }
 
+
+    // Helper methods
     private List<Task> filterByCompletionStatus(List<Task> tasks, Boolean completionStatus) {
         if (completionStatus) {
             return tasks.stream()
-                    .filter(Task::getIsDone)
+                    .filter(task -> task.getStatus() == Status.COMPLETED)
                     .collect(Collectors.toList());
         } else {
             return tasks.stream()
-                    .filter(task -> !task.getIsDone())
+                    .filter(task -> task.getStatus() == Status.PENDING)
                     .collect(Collectors.toList());
         }
     }
 
     private List<Task> filterByOverdueStatus(List<Task> tasks, Boolean overdueRequestParam) {
-        // Tasks are considered overdue if the due date is in the past and they have not been done
-        // Tasks that have a due date in the past but have been done are not considered overdue
+        // Tasks are considered overdue if the due date is in the past and the status is pending
         LocalDate today = LocalDate.now();
         if (overdueRequestParam) {
             return tasks.stream()
-                    .filter(task -> today.isAfter(task.getDueDate()) && !task.getIsDone())
+                    .filter(task -> today.isAfter(task.getDueDate())
+                            && task.getStatus() == Status.PENDING)
                     .collect(Collectors.toList());
         } else {
             return tasks.stream()
-                    .filter(task -> !today.isAfter(task.getDueDate()) || task.getIsDone())
+                    .filter(task -> !today.isAfter(task.getDueDate())
+                            || task.getStatus() == Status.COMPLETED)
                     .collect(Collectors.toList());
         }
     }

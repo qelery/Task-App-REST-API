@@ -25,7 +25,7 @@ public class Task {
     private LocalDate dueDate;
 
     @Column
-    private Boolean isDone = false;
+    private Status status = Status.PENDING;
 
     @JsonIgnore
     @ManyToOne
@@ -40,12 +40,12 @@ public class Task {
     public Task() {
     }
 
-    public Task(Long id, String name, String description, LocalDate dueDate, Boolean isDone) {
+    public Task(Long id, String name, String description, LocalDate dueDate, Status status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.dueDate = dueDate;
-        this.isDone = isDone;
+        this.status = status;
     }
 
     public Long getId() {
@@ -80,12 +80,12 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    public Boolean getIsDone() {
-        return isDone;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setIsDone(Boolean isDone) {
-        this.isDone = isDone;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public Category getCategory() {
@@ -102,7 +102,7 @@ public class Task {
                 "id=" + id +
                 ", description='" + description + '\'' +
                 ", dueDate=" + dueDate +
-                ", isDone=" + isDone +
+                ", status=" + status +
                 '}';
     }
 }

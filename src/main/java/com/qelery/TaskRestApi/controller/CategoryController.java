@@ -19,6 +19,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+
     // Category endpoints
     @GetMapping("/categories")
     public List<Category> getCategories() {
@@ -40,10 +41,17 @@ public class CategoryController {
         return categoryService.updateCategory(categoryId, category);
     }
 
+    @PatchMapping("/categories/{categoryId}")
+    public Category partialUpdateCategory(@PathVariable Long categoryId,
+                                          @RequestBody Category category) {
+        return categoryService.partialUpdateCategory(categoryId, category);
+    }
+
     @DeleteMapping("/categories/{categoryId}")
     public Category deleteCategory(@PathVariable Long categoryId) {
         return categoryService.deleteCategory(categoryId);
     }
+
 
     // Task endpoints
     @GetMapping("/categories/tasks/all")
@@ -76,6 +84,19 @@ public class CategoryController {
                            @PathVariable Long taskId,
                            @RequestBody Task task) {
         return categoryService.updateTask(categoryId, taskId, task);
+    }
+
+    @PutMapping("/categories/{categoryId}/tasks/{taskId}/complete")
+    public Task markTaskComplete(@PathVariable Long categoryId,
+                                 @PathVariable Long taskId) {
+        return categoryService.markTaskComplete(categoryId, taskId);
+    }
+
+    @PatchMapping("/categories/{categoryId}/tasks/{taskId}")
+    public Task partialUpdateTask(@PathVariable Long categoryId,
+                                  @PathVariable Long taskId,
+                                  @RequestBody Task task) {
+        return categoryService.partialUpdateTask(categoryId, taskId, task);
     }
 
     @DeleteMapping("/categories/{categoryId}/tasks/{taskId}")
