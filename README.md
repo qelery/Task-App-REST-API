@@ -7,6 +7,9 @@ Task app API with user authentication made in Spring Boot. Works with MySQL and 
 * GET `http://localhost:{port}/api/projects/1/tasks?overdue=false`
 * GET `http://localhost:{port}/api/projects/tasks/all?sort=priority,desc`
 * GET `http://localhost:{port}/api/projects/1/tasks?overdue=false&priority=high&limit=25`
+* POST `http://localhost:{port}/api/projects/7/tasks/3`
+* PUT `http://localhost:{port}/api/projects/7/tasks/3/complete`
+* DELETE `http://localhost:{port}/api/projects/7/tasks/3/complete`
 
 ## Setup
 
