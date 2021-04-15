@@ -4,7 +4,7 @@ Task app API with user authentication. Made in Spring Boot with a Postgres datab
 
 ## Example Requests
 
-* Organize tasks by categories
+* Organize tasks by projects
 * Mark a task completed with a simple GET request
     * `???????????????`
 
@@ -34,28 +34,28 @@ Task app API with user authentication. Made in Spring Boot with a Postgres datab
 * Must send Bearer Token (JWT) in authorization header with each request on private endpoints
 ### Endpoints
 
-#### Category endpoints
+#### Project endpoints
 Method |Endpoint | Functionality| 
 ------------ |------------ | ------------- | 
-GET | /api/categories | Lists all categories | 
-POST | /api/categories | Creates a new project | 
-GET | /api/categories/{categoryId} | Gets a single project with the supplied id | 
-PUT | /api/categories/{categoryId} | Updates a project with the supplied id |
-PATCH | /api/categories/{categoryId} | Updates a project; Supports patch semantics |
-DELETE | /api/categories/{categoryId} | Deletes a project with the supplied id |
+GET | /api/projects | Lists all projects | 
+POST | /api/projects | Creates a new project | 
+GET | /api/projects/{projectId} | Gets a single project with the supplied id | 
+PUT | /api/projects/{projectId} | Updates a project with the supplied id |
+PATCH | /api/projects/{projectId} | Updates a project; Supports patch semantics |
+DELETE | /api/projects/{projectId} | Deletes a project with the supplied id |
 <br>
 
 #### Task endpoints
 Method |Endpoint | Functionality| 
 ------------ |------------ | ------------- | 
-GET | /api/categories/tasks/all | List all tasks regardless of project |
-GET | /api/categories/{categoryId}/tasks | List tasks in the given project |
-POST | /api/categories/{categoryId}/tasks | Creates a new task in the given project | 
-GET | /api/categories/{categoryId}/tasks/{taskId}| Gets a single task from the given project |
-PUT | /api/categories/{categoryId}/tasks/{taskId}| Updates a task in the given project | 
-PATCH | /api/categories/{categoryId}/tasks/{taskId}| Updates a task in the given project; Supports patch semantics | 
-DELETE | /api/categories/{categoryId}/tasks/{itemId} | Deletes a task in the given project | 
-PUT | /api/categories/{categoryId}/tasks/{taskId}/complete | Marks the specified task complete |
+GET | /api/projects/tasks/all | List all tasks regardless of project |
+GET | /api/projects/{projectId}/tasks | List tasks in the given project |
+POST | /api/projects/{projectId}/tasks | Creates a new task in the given project | 
+GET | /api/projects/{projectId}/tasks/{taskId}| Gets a single task from the given project |
+PUT | /api/projects/{projectId}/tasks/{taskId}| Updates a task in the given project | 
+PATCH | /api/projects/{projectId}/tasks/{taskId}| Updates a task in the given project; Supports patch semantics | 
+DELETE | /api/projects/{projectId}/tasks/{itemId} | Deletes a task in the given project | 
+PUT | /api/projects/{projectId}/tasks/{taskId}/complete | Marks the specified task complete |
 <br>
 
 #### Auth endpoints
@@ -65,7 +65,7 @@ POST | /auth/users/register | Registers a user |
 POST | /auth/users/login |Logs a user in | 
 <br>
 
-#### Category JSON representation
+#### Project JSON representation
 
 ```
 [
@@ -113,7 +113,7 @@ Name |Type
 id | integer - identifier for that particular entity in the database  | 
 name | string - name of the project or task |
 description | string - description of the project or task |
-dueDate | date - format (yyyy-mmm-dd)
+dueDate | date - format (yyyy-mm-dd)
 priority | enum - high / normal / low — case-insensitive
 status | enum - pending / completed — case-insensitive
 <br>
@@ -127,8 +127,8 @@ status | pending / completed — case-insensitive |
 priority | low / normal / high — case-insensitive | 
 limit | any number |
 sort | e.g. sort=dueDate,desc &nbsp;&nbsp; / &nbsp;&nbsp; sort=name,asc &nbsp;&nbsp; / &nbsp;&nbsp; sort=priority,asc |
-dueBefore | yyyy-mmm-dd |
-dueAfter | yyyy-mmm-dd |
+dueBefore | yyyy-mm-dd |
+dueAfter | yyyy-mm-dd |
 
 ## ERD Diagram
 ![erd diagram](images/erd.png)

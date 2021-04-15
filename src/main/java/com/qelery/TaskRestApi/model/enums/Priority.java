@@ -1,7 +1,7 @@
 package com.qelery.TaskRestApi.model.enums;
 
 public enum Priority {
-    HIGH,
+    LOW,
     NORMAL,
-    LOW
+    HIGH
 }

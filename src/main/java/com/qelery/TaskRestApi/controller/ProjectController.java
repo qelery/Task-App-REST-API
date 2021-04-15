@@ -6,6 +6,7 @@ import com.qelery.TaskRestApi.model.enums.Priority;
 import com.qelery.TaskRestApi.model.enums.Status;
 import com.qelery.TaskRestApi.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,8 +64,8 @@ public class ProjectController {
     public List<Task> getAllTasks(@RequestParam(required=false) Boolean overdue,
                                   @RequestParam(required=false) Priority priority,
                                   @RequestParam(required=false) Status status,
-                                  @RequestParam(required=false) LocalDate dueBefore,
-                                  @RequestParam(required=false) LocalDate dueAfter,
+                                  @RequestParam(required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueBefore,
+                                  @RequestParam(required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueAfter,
                                   @RequestParam(defaultValue="100") int limit,
                                   @RequestParam(defaultValue="dueDate,desc") String sort) {
         return projectService.getAllTasks(overdue, priority, status, dueBefore, dueAfter, limit, sort);
@@ -76,8 +77,8 @@ public class ProjectController {
                                         @RequestParam(required=false) Boolean overdue,
                                         @RequestParam(required=false) Priority priority,
                                         @RequestParam(required=false) Status status,
-                                        @RequestParam(required=false) LocalDate dueBefore,
-                                        @RequestParam(required=false) LocalDate dueAfter,
+                                        @RequestParam(required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueBefore,
+                                        @RequestParam(required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueAfter,
                                         @RequestParam(defaultValue="100") int limit,
                                         @RequestParam(defaultValue="dueDate,desc") String sort) {
         return projectService.getTasksByProject(projectId, overdue, priority, status, dueBefore, dueAfter, limit, sort);

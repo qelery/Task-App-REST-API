@@ -2,7 +2,9 @@ package com.qelery.TaskRestApi.config;
 
 import com.qelery.TaskRestApi.model.enums.Priority;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PriorityEnumConverter implements Converter<String, Priority> {
 
     @Override

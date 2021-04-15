@@ -1,5 +1,6 @@
 package com.qelery.TaskRestApi.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qelery.TaskRestApi.model.enums.Priority;
 import com.qelery.TaskRestApi.model.enums.Status;
@@ -27,9 +28,11 @@ public class Task {
     private LocalDate dueDate;
 
     @Column
-    private Priority priority;
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+    private Priority priority = Priority.NORMAL;
 
     @Column
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
     private Status status = Status.PENDING;
 
     @JsonIgnore
