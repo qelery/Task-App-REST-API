@@ -1,23 +1,23 @@
 package com.qelery.TaskRestApi.service;
 
 
-import com.qelery.TaskRestApi.exception.CategoryExistsException;
-import com.qelery.TaskRestApi.exception.CategoryNotFoundException;
+import com.qelery.TaskRestApi.exception.ProjectExistsException;
+import com.qelery.TaskRestApi.exception.ProjectNotFoundException;
 import com.qelery.TaskRestApi.exception.TaskNotFoundException;
-import com.qelery.TaskRestApi.model.Category;
+import com.qelery.TaskRestApi.model.Project;
 import com.qelery.TaskRestApi.model.User;
 import com.qelery.TaskRestApi.model.enums.Priority;
 import com.qelery.TaskRestApi.model.enums.Status;
 import com.qelery.TaskRestApi.model.Task;
-import com.qelery.TaskRestApi.repository.CategoryRepository;
+import com.qelery.TaskRestApi.repository.ProjectRepository;
 import com.qelery.TaskRestApi.repository.TaskRepository;
 import com.qelery.TaskRestApi.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -28,62 +28,63 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class CategoryService {
+public class ProjectService {
 
-    private final CategoryRepository categoryRepository;
+    private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository, TaskRepository taskRepository) {
-        this.categoryRepository = categoryRepository;
+    public ProjectService(ProjectRepository projectRepository, TaskRepository taskRepository) {
+        this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
     }
 
 
-    // Category CRUD methods
-    public List<Category> getCategories(int limit, String sort) {
-        return categoryRepository.findAllByUserId(getUser().getId(), getPageable(limit, sort));
+    // Project CRUD methods
+    public List<Project> getProjects(int limit, String sort) {
+        return projectRepository.findAllByUserId(getUser().getId(), getPageable(limit, sort));
     }
 
-    public Category getCategory(Long categoryId) {
-        Category category = categoryRepository.findByIdAndUserId(categoryId, getUser().getId());
-        if (category != null) {
-            return category;
+    public Project getProject(Long projectId) {
+        Project project = projectRepository.findByIdAndUserId(projectId, getUser().getId());
+        if (project != null) {
+            return project;
         } else {
-            throw new CategoryNotFoundException(categoryId);
+            throw new ProjectNotFoundException(projectId);
         }
     }
 
-    public Category createCategory(Category category) {
-        if (categoryRepository.existsByNameAndUserId(category.getName(), getUser().getId())) {
-            throw new CategoryExistsException(category.getName());
+    public Project createProject(Project project) {
+        if (projectRepository.existsByNameAndUserId(project.getName(), getUser().getId())) {
+            throw new ProjectExistsException(project.getName());
         } else {
-            category.setUser(getUser());
-            return categoryRepository.save(category);
+            project.setUser(getUser());
+            return projectRepository.save(project);
         }
     }
 
-    public Category updateCategory(Long categoryId, Category newCategory) {
-        Category oldCategory = this.getCategory(categoryId); // handles CategoryNotFound exception
-        oldCategory.setName(newCategory.getName());
-        oldCategory.setDescription(newCategory.getDescription());
-        return categoryRepository.save(oldCategory);
+    public Project updateProject(Long projectId, Project newProject) {
+        Project oldProject = this.getProject(projectId); // handles ProjectNotFound exception
+        oldProject.setName(newProject.getName());
+        oldProject.setDescription(newProject.getDescription());
+        return projectRepository.save(oldProject);
     }
 
-    public Category partialUpdateCategory(Long categoryId, Category newCategory) {
-        Category existingCategory = this.getCategory(categoryId);
-        Optional.ofNullable(newCategory.getName()).ifPresent(existingCategory::setName);
-        Optional.ofNullable(newCategory.getDescription()).ifPresent(existingCategory::setDescription);
-        return categoryRepository.save(existingCategory);
+    public Project partialUpdateProject(Long projectId, Project newProject) {
+        Project existingProject = this.getProject(projectId);
+        Optional.ofNullable(newProject.getName()).ifPresent(existingProject::setName);
+        Optional.ofNullable(newProject.getDescription()).ifPresent(existingProject::setDescription);
+        return projectRepository.save(existingProject);
     }
 
-    public ResponseEntity<?> deleteCategory(Long categoryId) {
-        boolean categoryExists = categoryRepository.existsByIdAndUserId(categoryId, getUser().getId());
-        if (categoryExists) {
-            categoryRepository.deleteById(categoryId);
-            return new ResponseEntity<>("Category deleted", HttpStatus.OK);
+    public ResponseEntity<?> deleteProject(Long projectId) {
+        boolean projectExists = projectRepository.existsByIdAndUserId(projectId, getUser().getId());
+        if (projectExists) {
+            projectRepository.deleteById(projectId);
+            String message = "Project with id " + projectId + " deleted";
+            return ResponseEntity.ok(message);
         } else {
-            throw new CategoryNotFoundException(categoryId);
+            throw new ProjectNotFoundException(projectId);
         }
     }
 
@@ -97,33 +98,33 @@ public class CategoryService {
         return tasks;
     }
 
-    public List<Task> getTasksByCategory(Long categoryId, Boolean overdue, Priority priority, Status status,
-                                         LocalDate dueBefore, LocalDate dueAfter,
-                                         int limit, String sort) {
-        Category category = this.getCategory(categoryId); // handles CategoryNotFound exception
-        List<Task> tasks = taskRepository.findByCategoryId(category.getId(), getPageable(limit, sort));
+    public List<Task> getTasksByProject(Long projectId, Boolean overdue, Priority priority, Status status,
+                                        LocalDate dueBefore, LocalDate dueAfter,
+                                        int limit, String sort) {
+        Project project = this.getProject(projectId); // handles ProjectNotFound exception
+        List<Task> tasks = taskRepository.findByProjectId(project.getId(), getPageable(limit, sort));
         tasks = filterTasksByParams(tasks, overdue, priority, status, dueBefore, dueAfter);
         return tasks;
     }
 
-    public Task getTaskByCategory(Long categoryId, Long taskId) {
-        Category category = this.getCategory(categoryId);
-        Optional<Task> optionalTask = category.getTasks()
+    public Task getTaskByProject(Long projectId, Long taskId) {
+        Project project = this.getProject(projectId);
+        Optional<Task> optionalTask = project.getTasks()
                 .stream()
                 .filter(t -> t.getId().equals(taskId))
                 .findFirst();
         return optionalTask.orElseThrow(() -> new TaskNotFoundException(taskId));
     }
 
-    public Task createTask(Long categoryId, Task task) {
-        Category category = this.getCategory(categoryId);
+    public Task createTask(Long projectId, Task task) {
+        Project project = this.getProject(projectId);
         task.setUser(getUser());
-        task.setCategory(category);
+        task.setProject(project);
         return taskRepository.save(task);
     }
 
-    public Task updateTask(Long categoryId, Long taskID, Task newTask) {
-        Task oldTask = this.getTaskByCategory(categoryId, taskID); // handles CategoryNotFound and TaskNotFound exceptions
+    public Task updateTask(Long projectId, Long taskID, Task newTask) {
+        Task oldTask = this.getTaskByProject(projectId, taskID); // handles ProjectNotFound and TaskNotFound exceptions
         oldTask.setName(newTask.getName());
         oldTask.setDescription(newTask.getDescription());
         oldTask.setDueDate(newTask.getDueDate());
@@ -131,15 +132,15 @@ public class CategoryService {
         return taskRepository.save(oldTask);
     }
 
-    public ResponseEntity<?> markTaskComplete(Long categoryId, Long taskId) {
-        Task task = this.getTaskByCategory(categoryId, taskId);
+    public ResponseEntity<?> markTaskComplete(Long projectId, Long taskId) {
+        Task task = this.getTaskByProject(projectId, taskId);
         task.setStatus(Status.COMPLETED);
         taskRepository.save(task);
         return new ResponseEntity<>("Marked task complete", HttpStatus.OK);
     }
 
-    public Task partialUpdateTask(Long categoryId, Long taskId, Task newTask) {
-        Task existingTask = this.getTaskByCategory(categoryId, taskId);
+    public Task partialUpdateTask(Long projectId, Long taskId, Task newTask) {
+        Task existingTask = this.getTaskByProject(projectId, taskId);
         Optional.ofNullable(newTask.getName()).ifPresent(existingTask::setName);
         Optional.ofNullable(newTask.getDescription()).ifPresent(existingTask::setDescription);
         Optional.ofNullable(newTask.getDueDate()).ifPresent(existingTask::setDueDate);
@@ -147,8 +148,8 @@ public class CategoryService {
         return taskRepository.save(existingTask);
     }
 
-    public ResponseEntity<?> deleteTask(Long categoryId, Long taskId) {
-        Task task = this.getTaskByCategory(categoryId, taskId);
+    public ResponseEntity<?> deleteTask(Long projectId, Long taskId) {
+        Task task = this.getTaskByProject(projectId, taskId);
         taskRepository.delete(task);
         return new ResponseEntity<>("Removed task", HttpStatus.OK);
     }

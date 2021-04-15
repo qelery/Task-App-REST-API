@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<String> handleException(CategoryNotFoundException ex)  {
+    @ExceptionHandler(ProjectNotFoundException.class)
+    public ResponseEntity<String> handleException(ProjectNotFoundException ex)  {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -22,8 +22,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CategoryExistsException.class)
-    public ResponseEntity<String> handleException(CategoryExistsException ex)  {
+    @ExceptionHandler(ProjectExistsException.class)
+    public ResponseEntity<String> handleException(ProjectExistsException ex)  {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 

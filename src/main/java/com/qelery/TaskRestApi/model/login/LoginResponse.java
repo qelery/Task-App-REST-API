@@ -1,4 +1,4 @@
-package com.qelery.TaskRestApi.model.response;
+package com.qelery.TaskRestApi.model.login;
 
 public class LoginResponse {
 

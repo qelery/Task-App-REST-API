@@ -2,8 +2,8 @@ package com.qelery.TaskRestApi.service;
 
 import com.qelery.TaskRestApi.exception.EmailExistsException;
 import com.qelery.TaskRestApi.model.User;
-import com.qelery.TaskRestApi.model.request.LoginRequest;
-import com.qelery.TaskRestApi.model.response.LoginResponse;
+import com.qelery.TaskRestApi.model.login.LoginRequest;
+import com.qelery.TaskRestApi.model.login.LoginResponse;
 import com.qelery.TaskRestApi.repository.UserRepository;
 import com.qelery.TaskRestApi.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +38,14 @@ public class UserService {
         this.authenticationManager = authenticationManager;
     }
 
-    public User createUser(User user) {
+    public ResponseEntity<?> createUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new EmailExistsException(user.getEmail());
         } else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
+            userRepository.save(user);
+            String message = "Successfully registered new user with email address " + user.getEmail();
+            return ResponseEntity.ok(message);
         }
     }
 

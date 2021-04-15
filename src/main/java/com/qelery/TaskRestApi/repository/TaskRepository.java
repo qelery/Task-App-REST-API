@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<Task> findByCategoryId(Long categoryId, Pageable pageable);
+    List<Task> findByProjectId(Long projectId, Pageable pageable);
     List<Task> findAllByUserId(Long userId, Pageable pageable);
 }

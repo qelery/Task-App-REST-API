@@ -1,8 +1,9 @@
 package com.qelery.TaskRestApi.controller;
 
 import com.qelery.TaskRestApi.model.User;
-import com.qelery.TaskRestApi.model.request.LoginRequest;
+import com.qelery.TaskRestApi.model.login.LoginRequest;
 import com.qelery.TaskRestApi.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 

@@ -34,8 +34,8 @@ public class Task {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="category_id")
-    private Category category;
+    @JoinColumn(name="project_id")
+    private Project project;
 
     @JsonIgnore
     @ManyToOne
@@ -102,12 +102,12 @@ public class Task {
         this.priority = priority;
     }
 
-    public Category getCategory() {
-        return category;
+    public Project getProject() {
+        return project;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public void setUser(User user) {

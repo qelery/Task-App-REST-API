@@ -1,5 +1,6 @@
 package com.qelery.TaskRestApi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -28,7 +29,7 @@ public class User {
 
     @OneToMany(mappedBy="user")
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Category> categories;
+    private List<Project> projects;
 
     @OneToMany(mappedBy="user")
     @LazyCollection(LazyCollectionOption.FALSE)

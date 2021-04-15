@@ -1,4 +1,4 @@
-# Task-App-REST-API
+# Task App REST API
 
 Task app API with user authentication. Made in Spring Boot with a Postgres database.
 
@@ -38,23 +38,23 @@ Task app API with user authentication. Made in Spring Boot with a Postgres datab
 Method |Endpoint | Functionality| 
 ------------ |------------ | ------------- | 
 GET | /api/categories | Lists all categories | 
-POST | /api/categories | Creates a new category | 
-GET | /api/categories/{categoryId} | Gets a single category with the supplied id | 
-PUT | /api/categories/{categoryId} | Updates a category with the supplied id |
-PATCH | /api/categories/{categoryId} | Updates a category; Supports patch semantics |
-DELETE | /api/categories/{categoryId} | Deletes a category with the supplied id |
+POST | /api/categories | Creates a new project | 
+GET | /api/categories/{categoryId} | Gets a single project with the supplied id | 
+PUT | /api/categories/{categoryId} | Updates a project with the supplied id |
+PATCH | /api/categories/{categoryId} | Updates a project; Supports patch semantics |
+DELETE | /api/categories/{categoryId} | Deletes a project with the supplied id |
 <br>
 
 #### Task endpoints
 Method |Endpoint | Functionality| 
 ------------ |------------ | ------------- | 
-GET | /api/categories/tasks/all | List all tasks regardless of category |
-GET | /api/categories/{categoryId}/tasks | List tasks in the given category |
-POST | /api/categories/{categoryId}/tasks | Creates a new task in the given category | 
-GET | /api/categories/{categoryId}/tasks/{taskId}| Gets a single task from the given category |
-PUT | /api/categories/{categoryId}/tasks/{taskId}| Updates a task in the given category | 
-PATCH | /api/categories/{categoryId}/tasks/{taskId}| Updates a task in the given category; Supports patch semantics | 
-DELETE | /api/categories/{categoryId}/tasks/{itemId} | Deletes a task in the given category | 
+GET | /api/categories/tasks/all | List all tasks regardless of project |
+GET | /api/categories/{categoryId}/tasks | List tasks in the given project |
+POST | /api/categories/{categoryId}/tasks | Creates a new task in the given project | 
+GET | /api/categories/{categoryId}/tasks/{taskId}| Gets a single task from the given project |
+PUT | /api/categories/{categoryId}/tasks/{taskId}| Updates a task in the given project | 
+PATCH | /api/categories/{categoryId}/tasks/{taskId}| Updates a task in the given project; Supports patch semantics | 
+DELETE | /api/categories/{categoryId}/tasks/{itemId} | Deletes a task in the given project | 
 PUT | /api/categories/{categoryId}/tasks/{taskId}/complete | Marks the specified task complete |
 <br>
 
@@ -111,8 +111,8 @@ POST | /auth/users/login |Logs a user in |
 Name |Type
 ------------ |------------ | 
 id | integer - identifier for that particular entity in the database  | 
-name | string - name of the category or task |
-description | string - description of the category or task |
+name | string - name of the project or task |
+description | string - description of the project or task |
 dueDate | date - format (yyyy-mmm-dd)
 priority | enum - high / normal / low — case-insensitive
 status | enum - pending / completed — case-insensitive

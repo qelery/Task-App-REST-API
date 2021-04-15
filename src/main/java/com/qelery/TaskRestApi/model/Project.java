@@ -8,8 +8,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="categories")
-public class Category {
+@Table(name="projects")
+public class Project {
 
     @Id
     @Column
@@ -22,7 +22,7 @@ public class Category {
     @Column
     private String description;
 
-    @OneToMany(mappedBy="category", orphanRemoval=true)
+    @OneToMany(mappedBy="project", orphanRemoval=true)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Task> tasks;
 
@@ -31,13 +31,13 @@ public class Category {
     @JoinColumn(name="user_id")
     private User user;
 
-    public Category(Long id, String name, String description) {
+    public Project(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
     }
 
-    public Category() {
+    public Project() {
     }
 
     public Long getId() {
@@ -82,7 +82,7 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Category{" +
+        return "Project{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
