@@ -1,35 +1,36 @@
 # Task App REST API
 
-Task app API with user authentication. Made in Spring Boot with a Postgres database.
+Task app API with user authentication made in Spring Boot. Works with MySQL and PostgreSQL databases.
 
 ## Example Requests
 
-* Organize tasks by projects
-* Mark a task completed with a simple GET request
-    * `???????????????`
+* GET `http://localhost:{port}/api/projects/1/tasks?overdue=false`
+* GET `http://localhost:{port}/api/projects/tasks/all?sort=priority,desc`
+* GET `http://localhost:{port}/api/projects/1/tasks?overdue=false&priority=high&limit=25`
 
 ## Setup
 
-* Clone the repository
+* Create a PostgreSQL or MySQL database
+    * log into your RDBMS and run `CREATE DATABASE taskapp;`
 
-    * run `git clone https://github.com/qelery/??????????.git` in the terminal
-
-* Create Postgres database
-    * log into progress then run `CREATE DATABASE taskapp;`
-
-* Change postgres username and password per your installation
-    * open `src/main/resources/application.properties` from the repository
-    * change `spring.datasource.username` and `spring.datasource.password` per your postgres installation
+* Configure the Spring profile
+    * If using MySQL
+      * open `src/main/resources/application-mysql.properties` from the repository
+      * update the username and password per your RDBMS installation
+      * open `src/main/resources/application.properties` and update `spring.profiles.active=` to `mysql`'
+  * If using PostgreSQL
+    * open `src/main/resources/application-postgresql.properties` from the repository
+    * update the username and password per your RDBMS installation
+    * open `src/main/resources/application.properties` and update `spring.profiles.active=` to `postgresql`'
 
 * Run the program
-    * run `./mvnw spring-boot:run` in the terminal
-    * or use your favorite IDE
+    * run `./mvnw spring-boot:run` in the terminal or use your favorite IDE
 
 
 ## Usage
 
-* Must register on endpoint `/auth/users/register` before using any of the private endpoints
-* Login on endpoint `auth/users/login`
+* Register on public endpoint `/auth/users/register` before using any private endpoints
+* Login on public endpoint `auth/users/login`
     * Will receive JWT in response
 * Must send Bearer Token (JWT) in authorization header with each request on private endpoints
 ### Endpoints
@@ -65,7 +66,7 @@ POST | /auth/users/register | Registers a user |
 POST | /auth/users/login |Logs a user in | 
 <br>
 
-#### Project JSON representation
+#### JSON representation - Project
 
 ```
 [
@@ -97,25 +98,34 @@ POST | /auth/users/login |Logs a user in |
 ```
 <br>
 
-#### User JSON representation
+#### JSON representation - User
 
 ```
 {
     "email":"example@google.com"
-    "password":"",
+    "password":"password",
 }
 ```
 <br>
 
-### Fields
+### Request Body Fields
+
+#### Project & Task
 Name |Type
 ------------ |------------ | 
 id | integer - identifier for that particular entity in the database  | 
 name | string - name of the project or task |
 description | string - description of the project or task |
-dueDate | date - format (yyyy-mm-dd)
-priority | enum - high / normal / low — case-insensitive
-status | enum - pending / completed — case-insensitive
+dueDate | date - format (yyyy-mm-dd) |
+priority | enum - high / normal / low — case-insensitive |
+status | enum - pending / completed — case-insensitive |
+<br>
+
+#### User
+Name |Type
+------------ |------------ | 
+email | string  | 
+password | string |
 <br>
 
 ### Query Parameters
